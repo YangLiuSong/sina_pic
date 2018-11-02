@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yls.daoImpl.S_modelMapper">
+
+	
+	<select id="getAll1" resultMap="getS_ModelMap">
+		select * from s_model s,f_model f where s.F_ModelId=f.ModelId 
+	</select>
+	<select id="pagination" resultMap="getS_ModelMap" parameterType="java.util.Map">
+		select * from s_model s,f_model f where s.F_ModelId=f.ModelId	 limit #{offset},#{limit}
+	</select>
+	<select id="getCount" resultType="long">
+		select count(*) from s_model
+	</select>
+	<select id="getOne" resultMap="getS_ModelMap" parameterType="int">
+		select * from s_model s,f_model f where s.F_ModelId=f.ModelId and S_modelId =#{id}	
+	</select>
+	<resultMap type="S_Model" id="getS_ModelMap">
+ 		<id property="modelId" column="S_modelId"/>
+ 		<result property="modelName" column="S_ModelName"/>
+		<result property="methodName" column="methodName"/>
+		<result property="methodType" column="methodType"/>
+		<association property="f_model" javaType="F_Model">
+			<id property="modelId" column="F_ModelId"/>
+			<id property="modelName" column="ModelName"/>
+		</association>
+ 	</resultMap>
+	<insert id="add" parameterType="S_Model">
+		insert into s_model(S_modelName,F_modelId,methodName,methodType) values(#{modelName},#{f_model.modelId},#{methodName},#{methodType})
+	</insert>
+	<update id="update" parameterType="S_Model">
+		update s_model set S_modelName = #{modelName},F_modelId=#{f_model.modelId} ,methodName=#{methodName} ,methodType=#{methodType} where S_modelId = #{modelId}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from s_model where S_modelId = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="sina_pic_public">
+    <output-path>$PROJECT_DIR$/out/artifacts/sina_pic_public</output-path>
+    <root id="archive" name="sina_pic_public.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="sina_pic" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="hbase" />
+          <element id="library" level="project" name="lib" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="sina_pic/web/Web" />
+    </root>
+  </artifact>
+</component>

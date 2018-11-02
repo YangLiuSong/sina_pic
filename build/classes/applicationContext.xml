@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<context:property-placeholder location="classpath:db.properties"/>
+	<!-- 配置数据源 -->
+	<bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${user}"></property>
+		<property name="password" value="${password}"></property>
+		<property name="driverClass" value="${driverClass}"></property>
+		<property name="jdbcUrl" value="${jdbcUrl}"></property>
+		<property name="acquireIncrement" value="3"></property>
+		<property name="initialPoolSize" value="10"></property>
+		<property name="minPoolSize" value="2"></property>
+		<property name="maxPoolSize" value="10"></property>
+	</bean>
+	<!--创建sqlSessionFactory
+		typeAliasesPackage :指定实体类名的包，自动将指定包下的简单类名映射成别名
+	 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">		
+		<property name="dataSource" ref="datasource" />
+		<property name="configLocation" value="classpath:sqlMapConfig.xml"></property>
+		<property name="typeAliasesPackage" value="com.yls.domain"></property>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	<!-- 事务管理 -->
+	<bean id ="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource"></property>
+	</bean>
+	<tx:annotation-driven transaction-manager="txManager"/>
+	<!-- 用户登录 -->
+	<bean id="userDao" class="com.yls.daoImpl.userDaoImpl">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	<bean id="loginService" class="com.yls.servicesImpl.LoginServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	<!-- 所有action实例均需要配置成 scope="prototype" -->
+	<bean id = "loginAction" class="com.yls.actions.LoginAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+	</bean>
+	
+	<!-- 模块自动加载 -->
+	<bean id="F_modelDao" class="com.yls.daoImpl.F_modelDaoImpl">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	<bean id="loadModelService" class="com.yls.servicesImpl.LoadModelServiceImpl">
+		<property name="f_modelDao" ref="F_modelDao"></property>
+	</bean>
+	<bean id = "loadModelAction" class="com.yls.actions.LoadModelAction" scope="prototype">
+		<property name="service" ref="loadModelService"></property>
+	</bean>
+	
+	<!-- 一级标签操作 -->	
+	<bean id="F_tagDao" class="com.yls.daoImpl.F_tagDaoImpl">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	<bean id="f_tagService" class="com.yls.servicesImpl.F_tagServiceImpl">
+		<property name="dao" ref="F_tagDao"></property>
+	</bean>
+	<bean id = "f_tagAction" class="com.yls.actions.F_tagAction" scope="prototype">
+		<property name="service" ref="f_tagService"></property>
+	</bean> 
+	
+	<!-- 二级标签操作 -->	
+	 <bean id="S_tagDao" class="com.yls.daoImpl.S_tagDaoImpl">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	<bean id="s_tagService" class="com.yls.servicesImpl.S_tagServiceImpl">
+		<property name="fdao" ref="F_tagDao"></property>
+		<property name="dao" ref="S_tagDao"></property>
+	</bean>
+	<bean id = "s_tagAction" class="com.yls.actions.S_tagAction" scope="prototype">
+		<property name="service" ref="s_tagService"></property>
+	</bean> 
+	
+	<!-- 数据操作 -->
+	 <bean id="blogDataDao" class="com.yls.daoImpl.blogDataDaoSqlImpl">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	<bean id="blogDataService" class="com.yls.servicesImpl.blogDataServiceSqlImpl">
+		<property name="dao" ref="blogDataDao"></property>
+	</bean>
+	<bean id = "blogDataAction" class="com.yls.actions.blogDataAction" scope="prototype">
+		<property name="service" ref="blogDataService"></property>
+	</bean> 
+	
+	<!-- 一级模块操作 -->	
+	<bean id="f_modelService" class="com.yls.servicesImpl.F_modelServiceImpl">
+		<property name="dao" ref="F_modelDao"></property>
+	</bean>
+	<bean id = "f_modelAction" class="com.yls.actions.F_modelAction" scope="prototype">
+		<property name="service" ref="f_modelService"></property>
+	</bean> 
+	
+	<!-- 二级模块操作 -->	
+	 <bean id="S_modelDao" class="com.yls.daoImpl.S_modelDaoImpl">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	<bean id="s_modelService" class="com.yls.servicesImpl.S_modelServiceImpl">
+		<property name="fdao" ref="F_modelDao"></property>
+		<property name="dao" ref="S_modelDao"></property>
+	</bean>
+	<bean id = "s_modelAction" class="com.yls.actions.S_modelAction" scope="prototype">
+		<property name="service" ref="s_modelService"></property>
+	</bean> 
+</beans>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yls.daoImpl.S_tagMapper">
+
+	
+	<select id="getAll1" resultMap="getS_TagMap">
+		select * from s_tag s,f_tag f where s.F_TagId=f.TagId 
+	</select>
+	<select id="pagination" resultMap="getS_TagMap" parameterType="java.util.Map">
+		select * from s_tag s,f_tag f where s.F_TagId=f.TagId	 limit #{offset},#{limit}
+	</select>
+	<select id="getCount" resultType="long">
+		select count(*) from s_tag
+	</select>
+	<select id="getOne" resultMap="getS_TagMap" parameterType="int">
+		select * from s_tag s,f_tag f where s.F_TagId=f.TagId and S_tagId =#{id}	
+	</select>
+	<resultMap type="S_Tag" id="getS_TagMap">
+ 		<id property="tagId" column="S_tagId"/>
+		<result property="tagName" column="S_TagName"/>
+		<association property="f_tag" javaType="F_Tag">
+			<id property="tagId" column="F_TagId"/>
+			<id property="tagName" column="TagName"/>
+		</association>
+ 	</resultMap>
+	<insert id="add" parameterType="S_Tag">
+		insert into s_tag(S_tagName,F_tagId) values(#{tagName},#{f_tag.tagId})
+	</insert>
+	<update id="update" parameterType="S_Tag">
+		update s_tag set S_tagName = #{tagName},F_tagId=#{f_tag.tagId} where S_tagId = #{tagId}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from s_tag where S_tagId = #{id}
+	</delete>
+</mapper>

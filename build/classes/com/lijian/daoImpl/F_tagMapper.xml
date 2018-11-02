@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yls.daoImpl.F_tagMapper">
+
+	<!-- 根据id去查询一个user对象 -->
+	<select id="getAll" resultMap="getAllparameterMap">	
+		select * from f_tag f,s_tag s where f.tagId = s.F_tagId 
+	</select>
+	<resultMap type="F_Tag" id="getAllparameterMap">
+		<id property="tagId" column="tagId"/>
+		<result property="tagName" column="tagName"/>
+		<collection property="sonTags" ofType="S_Tag">
+			<id property="tagId" column="S_tagId"/>
+			<result property="tagName" column="S_tagName"/>
+			<result property="f_tag.tagId" column="F_tagId"/>
+		</collection>
+	</resultMap>
+	<!-- 只查修所有一级标签  不包括子标签信息 -->
+	<select id="getAll1" resultType="F_Tag">
+		select * from f_tag	
+	</select>
+	
+	<select id="pagination" resultType="F_Tag" parameterType="java.util.Map">
+		select * from f_tag	 limit #{offset},#{limit}
+	</select>
+	
+	<select id="getCount" resultType="long">
+		select count(*) from f_tag
+	</select>
+	<select id="getOne" resultType="F_Tag" parameterType="int">
+		select * from f_tag where tagId =#{id}	
+	</select>
+	<insert id="add" parameterType="F_Tag">
+		insert into f_tag(tagName) values(#{tagName})
+	</insert>
+	<update id="update" parameterType="F_Tag">
+		update f_tag set tagName = #{tagName} where tagId = #{tagId}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from f_tag where tagId = #{id}
+	</delete>
+</mapper>

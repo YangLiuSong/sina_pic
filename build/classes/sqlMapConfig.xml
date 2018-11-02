@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<mappers>
+	
+		<!-- 注册映射文件 -->
+		<!-- xml -->
+		<mapper resource="com/lijian/daoImpl/userMapper.xml"/>	
+		<mapper resource="com/lijian/daoImpl/S_modelMapper.xml"/>	
+		<mapper resource="com/lijian/daoImpl/F_modelMapper.xml"/>	
+		<mapper resource="com/lijian/daoImpl/F_tagMapper.xml"/>	
+		<mapper resource="com/lijian/daoImpl/S_tagMapper.xml"/>	
+		<mapper resource="com/lijian/daoImpl/blogDataSqlMapper.xml"/>	
+	</mappers>
+</configuration>

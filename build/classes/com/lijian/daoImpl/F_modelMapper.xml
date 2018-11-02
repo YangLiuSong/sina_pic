@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yls.daoImpl.F_modelMapper">
+
+	<!-- 根据id去查询一个user对象 -->
+	<select id="getAll" resultMap="getAllparameterMap">	
+		select * from f_model f,s_model s where f.ModelId = s.F_ModelId 
+	</select>
+	<resultMap type="F_Model" id="getAllparameterMap">
+		<id property="modelId" column="modelId"/>
+		<result property="modelName" column="modelName"/>
+		<collection property="sonModels" ofType="S_Model">
+			<id property="modelId" column="S_modelId"/>
+			<result property="modelName" column="S_modelName"/>
+			<result property="f_model.modelId" column="F_modelId"/>
+			<result property="methodName" column="methodName"/>
+			<result property="methodType" column="methodType"/>
+		</collection>
+	</resultMap>
+	<!-- 只查修所有一级标签  不包括子标签信息 -->
+	<select id="getAll1" resultType="F_model">
+		select * from f_model	
+	</select>
+	<select id="getOne" resultType="F_model" parameterType="int">
+		select * from f_model where ModelId =#{id}	
+	</select>
+	<insert id="add" parameterType="F_model">
+		insert into f_model(ModelName) values(#{modelName})
+	</insert>
+	<update id="update" parameterType="F_model">
+		update f_model set ModelName = #{modelName} where ModelId = #{modelId}
+	</update>
+	<delete id="delete" parameterType="int">
+		delete from f_model where modelId = #{id}
+	</delete>
+	<select id="pagination" resultType="F_Model" parameterType="java.util.Map">
+		select * from f_model	limit #{offset},#{limit}
+	</select>
+	<select id="getCount" resultType="long">
+		select count(*) from f_model
+	</select>
+</mapper>

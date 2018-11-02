@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yls.daoImpl.userMapper">
+
+	<!-- 根据id去查询一个user对象 -->
+	<select id="getUser" parameterType="User" resultType="int">
+		<!-- 如果用户不存在则查询结果为空，当查询结果为空时可能产生空指针异常，所以采用
+				查询 IFNULL(MAX(userId),-1) 来将为空的ID赋为-1（id合理情况为大于1的整数） 
+		 -->
+		select IFNULL(MAX(userId),-1) userId from user where userName = #{userName} and userPassword = #{userPassword}
+	</select>
+	
+</mapper>

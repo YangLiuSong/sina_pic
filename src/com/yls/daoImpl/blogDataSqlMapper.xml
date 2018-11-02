@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper	namespace="com.yls.daoImpl.blogDataSqlMapper">
+
+	<select id="getOne" parameterType="String" resultType="blogData">
+		select * from pic where pic_id = #{pic_id}
+	</select>
+	<select id="pagination" parameterType="String" resultType="blogData">
+		SELECT * FROM pic WHERE (count != 5 AND month = #{month}) ORDER BY RAND() LIMIT 10
+	</select>
+	<update id="update" parameterType="blogData">
+		update pic set tag_ids = #{tag_ids},tag_names = #{tag_names},count = #{count} where pic_id = #{pic_id}
+	</update>
+
+
+
+
+	<select id="getAll" resultType="blogData">
+		select id,user_id,user_name,gender,pic_ids,title,year,month,date,day,time,text,tag_ids,tag_names from feb
+	</select>
+	<select id="getCount" resultType="long">
+		select count(*) from feb
+	</select>
+	<insert id="add" parameterType="blogData">
+		insert into feb(id,user_id,user_name,gender,pic_ids,title,year,month,date,day,time,text,tag_ids,tag_names) values(#{id,user_id,user_name,gender,pic_ids,title,year,month,date,day,time,text,tag_ids,tag_names})
+	</insert>
+	<delete id="delete" parameterType="String">
+		delete from feb where id = #{id}
+	</delete>
+</mapper>
